@@ -13,6 +13,7 @@ describe('Event test', () => {
         sector: 'Pista', 
         amount: '200' 
       }],
+      categories: ["SHOW"],
       description: 'The Eras Tour',
       city: 'São Paulo',
       location: {

@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { EventRepositoryMongoose } from "../repositories/EventRepositoryMongoose"
 import { EventUseCase } from "../useCases/EventUseCase"
-import { EventController } from "../controllers/EventConstroller"
+import { EventController } from "../controllers/EventController"
 
 class EventRoutes {
   public router: Router

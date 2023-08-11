@@ -1,3 +1,4 @@
+import { Location } from "./Location"
 import { Price } from "./Price"
 import { User } from "./User"
 
@@ -7,6 +8,7 @@ class Event {
     public location: Location,
     public date: Date,
     public description: string,
+    public flyers: string[],
     public banner: string,
     public coupons: string[],
     public participants: User[],

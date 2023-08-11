@@ -43,10 +43,24 @@ class EventUseCase {
   }
 
   async findEventByLocation(
-    latitude: number,
-    longitude: number
+    latitude: string,
+    longitude: string
   ) {
-    
+    const cityName = await this.getCityNameByCoordinates(latitude, longitude)
+
+    const findEventsByCity = await this.eventRepository.findEventsByCity(cityName)
+
+    const eventWithRadius = findEventsByCity.filter((event) => {
+      const distance = this.calculateDistance(Number(latitude), Number(longitude), Number(event.location.latitude), Number(event.location.longitude))
+
+      return distance <= 3
+    })
+
+    return eventWithRadius
+  }
+
+  async findEventsByCategory(category: string) {
+    const events = await this.eventRepository.findEventsByCategory(category)
   }
 
   private async getCityNameByCoordinates(
@@ -60,11 +74,7 @@ class EventUseCase {
   
       if (response.data.status === 'OK' && response.data.results.length > 0) {
         const address = response.data.results[0].address_components
-        const cityType = address.find(
-          (type: any) => {
-            type.types.includes('administrative_area_level_2') && type.types.includes('political')
-          }
-        )
+        const cityType = address.find((type: any) => type.types.includes('administrative_area_level_2') && type.types.includes('political'))
     
         return cityType.long_name
       } 
@@ -73,6 +83,32 @@ class EventUseCase {
     catch (error) {
       throw new HttpException(401, 'Erro ao buscar cidade')
     }
+  }
+
+    // Haversine formula
+
+  private calculateDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number {
+    const R = 6371; // Radius of the earth in km
+    const dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+      Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    const d = R * c; // Distance in km
+    return d
+  }
+
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180)
   }
 }
 

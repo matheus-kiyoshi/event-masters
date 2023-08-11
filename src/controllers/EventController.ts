@@ -41,10 +41,25 @@ class EventController {
     const { latitude, longitude } = request.query
     try {
       const events = await this.eventUseCase.findEventByLocation(
-        Number(latitude),
-        Number(longitude)
+        String(latitude),
+        String(longitude)
       )
-      return response.status(200).json(event)
+      return response.status(200).json(events)
+    }
+    catch (error) {
+      next(error);
+    }
+  }
+
+  async findEventByCategory(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const { category } = request.query
+    try {
+      const events = await this.eventUseCase.findEventByCategory(String(category))
+      return response.status(200).json(events)
     }
     catch (error) {
       next(error);

@@ -33,6 +33,14 @@ class EventRoutes {
       '/category/:category',
       this.eventController.findEventsByCategory.bind(this.eventController),
     )
+    this.router.get(
+      '/:id',
+      this.eventController.findEventById.bind(this.eventController),
+    )
+    this.router.get(
+      '/:id/participants',
+      this.eventController.addParticipant.bind(this.eventController),
+    )
   }
 }
 

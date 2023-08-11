@@ -2,6 +2,7 @@ import { Event } from "../entities/Event";
 import { HttpException } from "../interfaces/HttpException";
 import { IEventRepository } from "../repositories/EventRepository";
 import axios from "axios";
+import { UserRepositoryMongoose } from "../repositories/UserRepositoryMongoose";
 
 class EventUseCase {
   constructor(private eventRepository: IEventRepository) {}
@@ -71,6 +72,46 @@ class EventUseCase {
     const events = await this.eventRepository.findEventsByCategory(category)
 
     return events
+  }
+
+  async findEventsByName(name: string) {
+    if (!name) {
+      throw new HttpException(400, 'O nome é obrigatório')
+    }
+    const events = await this.eventRepository.findEventsByName(name)
+
+    return events
+  }
+
+  async findEventById(id: string) {
+    if (!id) {
+      throw new HttpException(400, 'O id é obrigatório')
+    }
+    const event = await this.eventRepository.findEventById(id)
+
+    return event
+  }
+
+  async addParticipant(id: string, name: string, email: string) {
+    const event = await this.eventRepository.findEventById(id)
+
+    if (!event) {
+      throw new HttpException(404, 'Evento não encontrado')
+    }
+
+    const UserRepository = new UserRepositoryMongoose()
+    const participant = {
+      name,
+      email
+    }
+
+    const addUser = UserRepository.add(participant)
+
+    event.participants.push(participant)
+
+    const updateEvent = await this.eventRepository.update(event, id)
+    console.log(updateEvent)
+    return updateEvent
   }
 
   private async getCityNameByCoordinates(

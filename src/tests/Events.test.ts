@@ -13,12 +13,12 @@ describe('Event test', () => {
         sector: 'Pista', 
         amount: '200' 
       }],
-      categories: ["SHOW"],
+      categories: ["Show"],
       description: 'The Eras Tour',
       city: 'São Paulo',
       location: {
-        latitude: '-19.8658619', 
-        longitude: '-43.9737064'
+        latitude: '-23.527201', 
+        longitude: '-46.678572'
       },
       coupons: [],
       date: new Date(),

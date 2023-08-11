@@ -19,6 +19,11 @@ class EventUseCase {
       throw new HttpException(400, 'A localização é obrigatória')
     }
 
+    
+    if (!eventData.date) {
+      throw new HttpException(400, 'A data é obrigatória')
+    }
+
     // verify if already exists any event with the same location and date
     const verifyEvent = await this.eventRepository.findByLocationAndDate(
       eventData.location,
@@ -60,7 +65,12 @@ class EventUseCase {
   }
 
   async findEventsByCategory(category: string) {
+    if (!category) {
+      throw new HttpException(400, 'A categoria é obrigatória')
+    }
     const events = await this.eventRepository.findEventsByCategory(category)
+
+    return events
   }
 
   private async getCityNameByCoordinates(

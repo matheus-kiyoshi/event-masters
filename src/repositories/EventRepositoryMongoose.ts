@@ -50,7 +50,13 @@ class EventRepositoryMongoose implements IEventRepository {
   }
 
   async findEventsByCategory(category: string): Promise<Event[]> {
-    const findEvent = await EventModel.find({ category }).exec()
+    const findEvent = await EventModel.find({ categories: category }).exec()
+
+    return findEvent.map(event => event.toObject())
+  }
+
+  async findEventsByName(category: string): Promise<Event[]> {
+    const findEvent = await EventModel.find({ categories: category }).exec()
 
     return findEvent.map(event => event.toObject())
   }

@@ -56,7 +56,7 @@ class EventController {
     response: Response,
     next: NextFunction
   ) {
-    const { category } = request.query
+    const { category } = request.params
     try {
       const events = await this.eventUseCase.findEventsByCategory(String(category))
       return response.status(200).json(events)

@@ -51,14 +51,14 @@ class EventController {
     }
   }
 
-  async findEventByCategory(
+  async findEventsByCategory(
     request: Request,
     response: Response,
     next: NextFunction
   ) {
     const { category } = request.query
     try {
-      const events = await this.eventUseCase.findEventByCategory(String(category))
+      const events = await this.eventUseCase.findEventsByCategory(String(category))
       return response.status(200).json(events)
     }
     catch (error) {

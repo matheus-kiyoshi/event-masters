@@ -86,6 +86,20 @@ describe('Event test', () => {
       expect(response.status).toBe(200)
       expect(response.body.length).toBeGreaterThan(0)
   })
+  it('/POST event insert user', async () => {
+    const response = await request(express)
+      .post('/events/64d696cc6c2038403c4960fe')
+      .send({
+        name: 'Matheus',
+        email: 'matheuskf12@gmail.com'
+      })
+
+      if (response.error) {
+        console.log('ERRO: ', response.error)
+      }
+
+      expect(response.status).toBe(200)
+  })
 })
 
 const eventRepository = {

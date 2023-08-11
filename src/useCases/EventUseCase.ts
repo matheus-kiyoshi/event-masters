@@ -104,10 +104,16 @@ class EventUseCase {
       name,
       email
     }
+    let user: any = {}
+    const verifyIfUserExists = await UserRepository.verifyIfUserExists(email)
+    
+    if (!verifyIfUserExists) {
+      user = await UserRepository.add(participant) 
+    } else {
+      user = verifyIfUserExists
+    }
 
-    const addUser = UserRepository.add(participant)
-
-    event.participants.push(participant)
+    event.participants.push(user.id)
 
     const updateEvent = await this.eventRepository.update(event, id)
     console.log(updateEvent)

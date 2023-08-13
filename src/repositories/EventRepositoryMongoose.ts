@@ -25,7 +25,7 @@ const eventSchema = new mongoose.Schema({
   city: String,
   participants: {
     type: Array,
-    ref: "User"
+    ref: 'User'
   }
 })
 
@@ -70,8 +70,10 @@ class EventRepositoryMongoose implements IEventRepository {
   }
 
   async update(event: Event, id: string): Promise<any> {
+
     const eventUpdate = await EventModel.updateMany({ _id: id }, event)
-    return eventUpdate
+
+    return event
   }
 }
 

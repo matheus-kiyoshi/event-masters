@@ -112,12 +112,16 @@ class EventUseCase {
     } else {
       user = verifyIfUserExists
     }
+    
+    if(event.participants.includes(user._id)) {
+      throw new HttpException(400, 'O usuário já existe')
+    }
 
-    event.participants.push(user.id)
-
+    event.participants.push(user._id)
+    
     const updateEvent = await this.eventRepository.update(event, id)
-    console.log(updateEvent)
-    return updateEvent
+
+    return event
   }
 
   private async getCityNameByCoordinates(

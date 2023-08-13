@@ -104,8 +104,8 @@ class EventController {
     const { name, email } = request.body
     const { id } = request.params
     try {
-      const event = await this.eventUseCase.addParticipant(id, name, email)
-      return response.status(200).json(event)
+      const events = await this.eventUseCase.addParticipant(id, name, email)
+      return response.status(200).json(events)
     }
     catch (error) {
       next(error);

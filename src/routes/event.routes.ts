@@ -37,7 +37,7 @@ class EventRoutes {
       '/:id',
       this.eventController.findEventById.bind(this.eventController),
     )
-    this.router.get(
+    this.router.post(
       '/:id/participants',
       this.eventController.addParticipant.bind(this.eventController),
     )

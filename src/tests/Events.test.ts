@@ -3,6 +3,7 @@ import { Event } from "../entities/Event"
 import request from 'supertest'
 import { EventUseCase } from "../useCases/EventUseCase"
 import { IEventRepository } from "../repositories/EventRepository"
+import crypto from 'node:crypto'
 
 const app = new App()
 const express = app.app
@@ -86,12 +87,12 @@ describe('Event test', () => {
       expect(response.status).toBe(200)
       expect(response.body.length).toBeGreaterThan(0)
   })
-  it('/POST event insert user', async () => {
+  it.only('/POST event insert user', async () => {
     const response = await request(express)
-      .post('/events/64d696cc6c2038403c4960fe')
+      .post('/events/64d8f389aeda48191993daa8/participants')
       .send({
         name: 'Matheus',
-        email: 'matheuskf12@gmail.com'
+        email: crypto.randomBytes(10).toString('hex') + '@test.com'
       })
 
       if (response.error) {

@@ -41,7 +41,8 @@ class EventUseCase {
 
     eventData = {
       ...eventData,
-      city: cityName
+      city: cityName.cityName,
+      formattedAddress: cityName.formattedAddress
     }
 
     const result = await this.eventRepository.add(eventData);
@@ -54,7 +55,7 @@ class EventUseCase {
   ) {
     const cityName = await this.getCityNameByCoordinates(latitude, longitude)
 
-    const findEventsByCity = await this.eventRepository.findEventsByCity(cityName)
+    const findEventsByCity = await this.eventRepository.findEventsByCity(cityName.cityName)
 
     const eventWithRadius = findEventsByCity.filter((event) => {
       const distance = this.calculateDistance(Number(latitude), Number(longitude), Number(event.location.latitude), Number(event.location.longitude))
@@ -137,7 +138,12 @@ class EventUseCase {
         const address = response.data.results[0].address_components
         const cityType = address.find((type: any) => type.types.includes('administrative_area_level_2') && type.types.includes('political'))
     
-        return cityType.long_name
+        const formattedAddress = response.data.results[0].formatted_address
+
+        return {
+          cityName: cityType.long_name,
+          formattedAddress: formattedAddress
+        }
       } 
       throw new HttpException(404, 'Cidade não encontrada')
     }

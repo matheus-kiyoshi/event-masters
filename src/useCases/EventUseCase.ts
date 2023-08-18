@@ -75,6 +75,31 @@ class EventUseCase {
     return events
   }
 
+  async filterEvents(
+    latitude: number, 
+    longitude: number, 
+    name: string, 
+    date: Date, 
+    category: string, 
+    radius: number, 
+    price: string
+  ) {
+    const events = await this.eventRepository.findEventsByFilter(
+      name,
+      date,
+      category,
+      price
+    )
+
+    return events
+  }
+
+  async findMainEvents() {
+    const events = await this.eventRepository.findMainEvents(new Date())
+
+    return events
+  }
+
   async findEventsByName(name: string) {
     if (!name) {
       throw new HttpException(400, 'O nome é obrigatório')
@@ -148,6 +173,7 @@ class EventUseCase {
       throw new HttpException(404, 'Cidade não encontrada')
     }
     catch (error) {
+      console.log(error)
       throw new HttpException(401, 'Erro ao buscar cidade')
     }
   }

@@ -66,6 +66,43 @@ class EventController {
     }
   }
 
+  async filterEvents(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const { latitude, longitude, name, date, category, radius, price } = request.query
+    try {
+      const events = await this.eventUseCase.filterEvents(
+        Number(latitude),
+        Number(longitude),
+        String(name),
+        date,
+        category,
+        radius,
+        price
+      )
+      return response.status(200).json(events)
+    }
+    catch (error) {
+      next(error);
+    }
+  }
+
+  async findMainEvents(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    try {
+      const events = await this.eventUseCase.findMainEvents()
+      return response.status(200).json(events)
+    }
+    catch (error) {
+      next(error);
+    }
+  }
+
   async findEventsByName(
     request: Request,
     response: Response,

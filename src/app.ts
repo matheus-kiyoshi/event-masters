@@ -2,6 +2,8 @@ import express, { Application } from 'express'
 import { connect } from './infra/database'
 import { errorMiddleware } from './middlewares/error.middlewares'
 import { EventRoutes } from './routes/event.routes'
+import cors from 'cors'
+import path from 'node:path'
 
 class App { 
   public app: Application
@@ -24,6 +26,8 @@ class App {
 
   private middlewaresInitialize() {
     this.app.use(express.json())
+    this.app.use(cors())
+    this.app.use('/uploads', express.static(path.join(__dirname, './tmp/uploads', 'uploads')))
     this.app.use(express.urlencoded({ extended: true }))
   }
 
@@ -34,4 +38,4 @@ class App {
   }
 }
 
-export { App}
+export { App }

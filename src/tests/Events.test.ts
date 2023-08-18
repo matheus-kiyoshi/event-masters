@@ -17,6 +17,7 @@ const event: Event = {
   categories: ["Show"],
   description: 'The Eras Tour',
   city: 'São Paulo',
+  formattedAddress: 'Allianz Parque, São Paulo',
   location: {
     latitude: '-23.527201', 
     longitude: '-46.678572'
@@ -32,12 +33,13 @@ const event: Event = {
 } 
 
 describe('Event test', () => {
-  it('/POST Event', async () => {
+  it.only('/POST Event', async () => {
     const response = await request(express)
       .post('/events')
       .field('title', event.title)
       .field('description', event.description)
       .field('city', event.city)
+      .field('formattedAddress', event.formattedAddress)
       .field('categories', event.categories)
       .field('location[latitude]', event.location.latitude)
       .field('location[longitude]', event.location.longitude)
@@ -87,7 +89,7 @@ describe('Event test', () => {
       expect(response.status).toBe(200)
       expect(response.body.length).toBeGreaterThan(0)
   })
-  it.only('/POST event insert user', async () => {
+  it('/POST event insert user', async () => {
     const response = await request(express)
       .post('/events/64d8f389aeda48191993daa8/participants')
       .send({
@@ -107,6 +109,7 @@ const eventRepository = {
   add: jest.fn(),
   findEventsByCity: jest.fn(),
   findEventsByCategory: jest.fn(),
+  findMainEvents: jest.fn(),
   findByLocationAndDate: jest.fn(),
   findEventsByName: jest.fn(),
   findEventById: jest.fn(),

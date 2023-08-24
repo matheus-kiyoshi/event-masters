@@ -19,8 +19,8 @@ const event: Event = {
   city: 'São Paulo',
   formattedAddress: 'Allianz Parque, São Paulo',
   location: {
-    latitude: '-23.527201', 
-    longitude: '-46.678572'
+    latitude: '-23.527', 
+    longitude: '-46.678'
   },
   banner: 'banner.png',
   flyers: [
@@ -33,7 +33,7 @@ const event: Event = {
 } 
 
 describe('Event test', () => {
-  it.only('/POST Event', async () => {
+  it('/POST Event', async () => {
     const response = await request(express)
       .post('/events')
       .field('title', event.title)
@@ -59,7 +59,7 @@ describe('Event test', () => {
   })
   it('/GET/:id Get event by id', async () => {
     const response = await request(express)
-      .get('/events/64d696cc6c2038403c4960fe')
+      .get('/events/64e76d0a07270a57ad4d981d')
 
       if (response.error) {
         console.log('ERRO: ', response.error)
@@ -69,7 +69,7 @@ describe('Event test', () => {
   })
   it('/GET Get event by location', async () => {
     const response = await request(express)
-      .get('/events?latitude=-23.527201&longitude=-46.678572')
+      .get('/events?latitude=-23.527&longitude=-46.678')
 
       if (response.error) {
         console.log('ERRO: ', response.error)
@@ -91,7 +91,7 @@ describe('Event test', () => {
   })
   it('/POST event insert user', async () => {
     const response = await request(express)
-      .post('/events/64d8f389aeda48191993daa8/participants')
+      .post('/events/64e76d0a07270a57ad4d981d/participants')
       .send({
         name: 'Matheus',
         email: crypto.randomBytes(10).toString('hex') + '@test.com'
@@ -109,8 +109,9 @@ const eventRepository = {
   add: jest.fn(),
   findEventsByCity: jest.fn(),
   findEventsByCategory: jest.fn(),
-  findMainEvents: jest.fn(),
   findByLocationAndDate: jest.fn(),
+  findMainEvents: jest.fn(),
+  findEventsByFilter: jest.fn(),
   findEventsByName: jest.fn(),
   findEventById: jest.fn(),
   update: jest.fn()
@@ -140,9 +141,9 @@ describe('Unit Test', () => {
 
   it('should return an array of event by id', async () => {
     eventRepository.findEventById.mockResolvedValueOnce(event)
-    const result = await eventUseCase.findEventById('64d696cc6c2038403c4960fe')
+    const result = await eventUseCase.findEventById('64e76d0a07270a57ad4d981d')
 
     expect(result).toEqual(event)
-    expect(eventRepository.findEventById).toHaveBeenCalledWith('64d696cc6c2038403c4960fe')
+    expect(eventRepository.findEventById).toHaveBeenCalledWith('64e76d0a07270a57ad4d981d')
   })
 })

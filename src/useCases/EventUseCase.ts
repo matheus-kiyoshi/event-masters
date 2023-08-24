@@ -3,6 +3,7 @@ import { HttpException } from "../interfaces/HttpException";
 import { IEventRepository } from "../repositories/EventRepository";
 import axios from "axios";
 import { UserRepositoryMongoose } from "../repositories/UserRepositoryMongoose";
+require('events').EventEmitter.defaultMaxListeners = 15
 
 class EventUseCase {
   constructor(private eventRepository: IEventRepository) {}
@@ -156,20 +157,22 @@ class EventUseCase {
   ) {
     try {
       const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyAhKk5549E8oy5zs-cxAqvy3_j3jDQJoBo`,
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
       )
-  
-      if (response.data.status === 'OK' && response.data.results.length > 0) {
-        const address = response.data.results[0].address_components
-        const cityType = address.find((type: any) => type.types.includes('administrative_area_level_2') && type.types.includes('political'))
+      if (response.data.address) {
+        const street = response.data.address.road || response.data.address.pedestrian;
+        const city = response.data.address.city || response.data.address.town || response.data.address.village;
+        const leisure = response.data.name
     
-        const formattedAddress = response.data.results[0].formatted_address
-
-        return {
-          cityName: cityType.long_name,
-          formattedAddress: formattedAddress
+        if (city) {
+          const formattedAddress = `${leisure ? leisure + ', ' : ''}${street ? street + ', ' : ''}${city}, ${response.data.address.country}`;
+  
+          return {
+            cityName: city,
+            formattedAddress: formattedAddress
+          };
         }
-      } 
+      }
       throw new HttpException(404, 'Cidade não encontrada')
     }
     catch (error) {
